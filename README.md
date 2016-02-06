@@ -14,7 +14,7 @@ gem "lita-book"
 
 ### Required attributes
 
-*`rakutenId` (String) - 楽天アプリID
+* `rakutenId` (String) - 楽天アプリID
 
 ### Example
 
