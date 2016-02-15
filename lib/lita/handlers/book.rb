@@ -19,26 +19,32 @@ module Lita
         json = Net::HTTP.get(uri)
         res = JSON.parse(json)
 
-        r = res["Items"][0]["Item"]
+        if res["count"] == 0 then
+          response.reply("見つかりませんでした")
+        else
+          r = res["Items"][0]["Item"]
 
-        target = response.room
-        text = "#{r['author']} 著\n#{r['itemCaption']}"
-        attachment = Lita::Adapters::Slack::Attachment.new(
-          text, {
-            title: "#{r['title']} (#{r['publisherName']}) - #{r['salesDate']}",
-            text: text,
-            fields: [
-              {
-                title: "Amazon.co.jp",
-                value: "￥ #{r['itemPrice']}\n#{amazon(isbn10(r['isbn']))}",
-                short: false
-              }
-            ],
-            thumb_url: "#{r['largeImageUrl']}"
-          }
-        )
-        robot.chat_service.send_attachment(target, attachment)
+          target = response.room
+          text = "#{r['author']} 著\n#{r['itemCaption']}"
+          attachment = Lita::Adapters::Slack::Attachment.new(
+            text, {
+              title: "#{r['title']} (#{r['publisherName']}) - #{r['salesDate']}",
+              text: text,
+              fields: [
+                {
+                  title: "Amazon.co.jp",
+                  value: "￥ #{r['itemPrice']}\n#{amazon(isbn10(r['isbn']))}",
+                  short: false
+                }
+              ],
+              thumb_url: "#{r['largeImageUrl']}"
+            }
+          )
+          robot.chat_service.send_attachment(target, attachment)
+        end
 
+      rescue => e
+        response.reply("#{e.backtrace}\n #{e.message}")
       end
 
       def isbn10(isbn13)
