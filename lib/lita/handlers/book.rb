@@ -10,7 +10,7 @@ module Lita
       config :rakutenId
 
       #route(/^book:\s+(.+).*$/, :book, help: {"book: BOOK_TITLE" => "Return book information"})
-      route(/(.+)/, :book, channel: "book")
+      route(/^(.+)$/, :book, channel: "book")
 
       def book(response)
         url = "https://app.rakuten.co.jp/services/api/BooksBook/Search/20130522?format=json&title="
