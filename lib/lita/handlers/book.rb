@@ -2,18 +2,22 @@ require 'net/http'
 require "addressable/uri"
 require 'json'
 require 'open-uri'
+require 'lita-channel'
 
 module Lita
   module Handlers
     class Book < Handler
       config :rakutenId
 
-      route(/^book:\s+(.+).*$/, :book, help: {"book: BOOK_TITLE" => "Return book information"})
+      #route(/^book:\s+(.+).*$/, :book, help: {"book: BOOK_TITLE" => "Return book information"})
+      route(/(.+)/, :book, channel: "book")
 
       def book(response)
         url = "https://app.rakuten.co.jp/services/api/BooksBook/Search/20130522?format=json&title="
         url << response.matches[0][0]
         url << "&applicationId=" << config.rakutenId
+
+        if response.matches[0][0] == "" then return end
 
         uri = Addressable::URI.parse(url)
         json = Net::HTTP.get(uri)
@@ -44,7 +48,7 @@ module Lita
         end
 
       rescue => e
-        response.reply("#{e.backtrace}\n #{e.message}")
+        e.message
       end
 
       def isbn10(isbn13)
