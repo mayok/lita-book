@@ -16,7 +16,6 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "lita", ">= 4.7"
   spec.add_runtime_dependency "addressable"
-  spec.add_runtime_dependency "open-uri"
   spec.add_runtime_dependency "lita-channel"
 
   spec.add_development_dependency "bundler", "~> 1.3"
